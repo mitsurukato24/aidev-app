@@ -1,0 +1,13 @@
+{
+  "skill": "ci",
+  "description": "CI保守スキルの忠実度（new-status.sh 必須/run-checks.sh/deploy.ci 駆動/ゲート非弱体化/節約/CI 緑/必須チェックリスト）。",
+  "contracts": [
+    {"file": "SKILL.md",
+     "must_contain": ["run-checks.sh", "必須チェックリスト", "WORKFLOW.md", "deploy.ci", "ゲート（テスト/カバレッジ）を弱めない", "path-filter", "CI が緑", "new-status.sh"],
+     "must_not_contain": ["docs/rules/", "docs/templates/"]},
+    {"file": "../../agents/deployer.md",
+     "must_contain": ["deploy.ci", "status.json"],
+     "must_not_contain": ["docs/rules/"]}
+  ],
+  "commands": []
+}

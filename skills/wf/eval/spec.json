@@ -1,0 +1,14 @@
+{
+  "skill": "wf",
+  "description": "オーケストレータの忠実度（優先度判定/起票スクリプト/必須スクリプト/チェックリスト）と status.py の動作を評価する。",
+  "contracts": [
+    {"file": "SKILL.md",
+     "must_contain": ["gh issue list", "new-worktree.sh", ".worktree/", "in-progress", "finish-worktree.sh", "run-checks.sh", "必須チェックリスト", "WORKFLOW.md", "マージ判断", "gh pr merge", "停止せず優先度判定"],
+     "must_not_contain": ["docs/work/", "new-ledger.sh"]}
+  ],
+  "commands": [
+    {"name": "status.py new + show works",
+     "cmd": ["bash", "-c", "p=$(python3 scripts/status.py new __eval_tmp__ --type content); python3 scripts/status.py node \"$p\" 検証 --result PASS >/dev/null; python3 scripts/status.py show \"$p\"; rm -rf \"$(dirname \"$p\")\""],
+     "expect_exit": 0, "expect_stdout_contains": ["検証", "PASS"]}
+  ]
+}

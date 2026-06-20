@@ -1,0 +1,17 @@
+{
+  "skill": "retro",
+  "description": "retro の忠実度: 6観点・前回比の相対採点(上限なし加点)・修正前後のブラインドA/B検証・採用後の eval 固定が SKILL/agent に残っているか。",
+  "contracts": [
+    {"file": "SKILL.md",
+     "must_contain": ["QUALITY.md", "6観点", "前回比", "上限なし", "ブラインド", "eval-judge",
+                      "scoreboard.json", "retro-report.md", "run-evals.sh", "必須チェックリスト", "metric"],
+     "must_not_contain": ["docs/rules/", "docs/templates/"]},
+    {"file": "../../agents/retrospector.md",
+     "must_contain": ["QUALITY.md", "metrics", "root cause", "scoreboard.json"],
+     "must_not_contain": ["docs/rules/"]},
+    {"file": "../../agents/eval-judge.md",
+     "must_contain": ["blind", "without being told", "6 criteria", "winner"],
+     "must_not_contain": ["docs/rules/"]}
+  ],
+  "commands": []
+}

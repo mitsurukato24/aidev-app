@@ -1,0 +1,13 @@
+{
+  "skill": "runtime-verify",
+  "description": "動作検証スキルの忠実度（new-status.sh 必須/鍵なし起動/E2E 実操作/証跡記録/必須チェックリスト・config.runtime_verify 駆動）。",
+  "contracts": [
+    {"file": "SKILL.md",
+     "must_contain": ["new-status.sh", "必須チェックリスト", "WORKFLOW.md", "runtime_verify", "鍵なし", "証跡", "検証:"],
+     "must_not_contain": ["docs/rules/", "docs/templates/"]},
+    {"file": "../../agents/runtime-verifier.md",
+     "must_contain": ["runtime_verify", "status.json"],
+     "must_not_contain": ["docs/rules/"]}
+  ],
+  "commands": []
+}

@@ -1,0 +1,13 @@
+{
+  "skill": "release",
+  "description": "リリーススキルの忠実度（new-status.sh 必須/ビルド番号単調増加/署名構成/リリースノート/秘密非開示/必須チェックリスト）。",
+  "contracts": [
+    {"file": "SKILL.md",
+     "must_contain": ["new-status.sh", "必須チェックリスト", "WORKFLOW.md", "ビルド番号は単調増加", "署名構成", "リリースノート", "リリース:"],
+     "must_not_contain": ["docs/rules/", "docs/templates/"]},
+    {"file": "../../agents/deployer.md",
+     "must_contain": ["monotonically increasing", "status.json"],
+     "must_not_contain": ["docs/rules/"]}
+  ],
+  "commands": []
+}

@@ -1,0 +1,13 @@
+{
+  "skill": "wf-review",
+  "description": "レビューノードの忠実度（観点/重大度/高指摘の差し戻し+再検証/必須チェックリスト）。",
+  "contracts": [
+    {"file": "SKILL.md",
+     "must_contain": ["必須チェックリスト", "重大度", "run-checks.sh", "WORKFLOW.md", "file:line"],
+     "must_not_contain": ["docs/work/"]},
+    {"file": "../../agents/wf-reviewer.md",
+     "must_contain": ["status.json"],
+     "must_not_contain": ["docs/work/"]}
+  ],
+  "commands": []
+}

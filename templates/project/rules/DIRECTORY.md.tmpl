@@ -1,0 +1,58 @@
+# DIRECTORY ルール — 配置の決まり
+
+このリポジトリの構成と「何をどこに置くか」の規約。新規ファイルはここに従って配置する。
+（big-picture アーキは [../docs/DESIGN.md] と [../../CLAUDE.md] を参照。）
+
+<!-- project-init が生成する骨組み。.claude/ の節は汎用なのでそのまま、トップレベルと各 component の節を
+     このプロジェクトの実構成に合わせて埋める。 -->
+
+## トップレベル
+
+```
+{{CODENAME}}/
+{{TOPLEVEL_TREE}}
+├── .claude/    # AIDD フレームワーク本体＋プロジェクト設定（下記）
+├── docs/       # 一次設計/要件ドキュメント・作業台帳(issues)・retro
+├── CLAUDE.md   # 薄い汎用ローダ（.claude/ を読めと指す。英語）
+└── README.md   # リポジトリ入口
+```
+<!-- {{TOPLEVEL_TREE}} に各 component ディレクトリを 1 行ずつ（例: ├── app/  # クライアント / ├── backend/  # サーバ）。 -->
+
+## .claude/（AIDD フレームワーク＋プロジェクト設定）
+
+```
+.claude/
+├── PROJECT.md      # 【PROJECT固有】製品概要・スタック・運用原則・ユーザー像
+├── config.json     # 【PROJECT固有・機械可読】components/checks/paths/vcs/deploy/domain_skills（scriptが読む）
+├── docs/           # 【PROJECT固有】DESIGN.md / SPEC.md（一次設計/要件ドキュメントへの入口）
+├── rules/          # 【PROJECT固有】WORKFLOW/GIT/CODING/SECURITY/DATA_POLICY/DIRECTORY/QUALITY
+├── templates/      # 【汎用】status.schema.json / 各種雛形 / project/（新規プロジェクト雛形）
+├── agents/         # 【汎用】sub-agent（config/rules を読んで適応）
+└── skills/         # 【汎用】フローノード/メタ(retro,project-init)/専用Skill ＋ lib/config.py ＋ eval
+```
+
+- **層の分離**: `skills`/`agents`/`templates` は**汎用フレームワーク本体**（どのプロジェクトでも同一）。
+  `PROJECT.md`/`config.json`/`docs/`/`rules/` は**プロジェクト固有**（差し替え対象）。スクリプトは
+  `config.json` を読んでスタック非依存に動く（[WORKFLOW.md] §0 の AIDD 注記）。
+- 機械可読（JSON）= config / status / eval spec、人間が読む散文（md）= PROJECT/docs/rules（md vs JSON 原則）。
+
+## docs/
+
+- 一次設計/要件ドキュメント（`{{DESIGN_DOC_PATH}}` / `{{SPEC_DOC_PATH}}`）が要件・設計の正
+  （`.claude/docs/DESIGN.md` / `SPEC.md` がこれらへの入口・要約）。
+- `retro/` — retro の出力（`<date>-<scope>.md`）＋ `scoreboard.json`（相対採点の基準値・累積）。
+- `issues/<issue_name>/status.json` — **1 Issue = 1 作業フォルダ**（worktree 内に置かれる。`paths.work_ledger_dir`）。
+  `new-worktree.sh` が `.worktree/<issue_name>/` に worktree＋ブランチ＋status.json を作り、全ノードが
+  `status.py` でこの 1 ファイルを更新（監査証跡としてコミット対象）。
+- **形式の原則**: スクリプトが読み書きする状態・データは JSON、人間が執筆・レビューする散文・設計・ルールは
+  Markdown（[WORKFLOW.md] §0）。
+
+## 各 component の配置
+
+{{COMPONENT_LAYOUTS}}
+<!-- 各 component（config.components と対応）のディレクトリ構成と「何をどこに置くか」を書く。例:
+### backend/
+- app/api/... HTTP 層 / app/services/... ロジック層 / data/... 静的データ / tests/...
+### app/
+- lib/core/... 横断 / lib/features/<feature>/{domain,data,presentation} / lib/l10n（生成物は編集禁止）
+新規ファイルが既存の命名/分割規約に従うよう、命名規則も書く。 -->

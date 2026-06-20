@@ -1,0 +1,13 @@
+{
+  "skill": "deploy",
+  "description": "デプロイスキルの忠実度（new-status.sh 必須/target レシピ駆動/秘密非コミット/冪等/配信後スモーク/予算 PM ゲート/必須チェックリスト）。",
+  "contracts": [
+    {"file": "SKILL.md",
+     "must_contain": ["new-status.sh", "必須チェックリスト", "WORKFLOW.md", "deploy.targets", "冪等", "スモーク", "秘密情報をコミットしない", "デプロイ:"],
+     "must_not_contain": ["docs/rules/", "docs/templates/"]},
+    {"file": "../../agents/deployer.md",
+     "must_contain": ["deploy.targets", "status.json"],
+     "must_not_contain": ["docs/rules/"]}
+  ],
+  "commands": []
+}

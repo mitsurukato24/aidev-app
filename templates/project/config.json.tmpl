@@ -1,0 +1,86 @@
+{
+  "schema": "aidd/config@1",
+  "_comment": "AIDD (AI-Driven Development) のプロジェクト設定。フレームワーク本体(.claude/skills|agents|templates)は不変で、このファイルと .claude/PROJECT.md / .claude/rules / .claude/docs を読んでプロジェクトに沿って動く。散文は md・機械可読な状態/設定は JSON(本ファイル)。project-init Skill が本テンプレから生成する。各 {{...}} を実値に置換すること(プレースホルダは有効 JSON のため文字列値にしてある)。",
+
+  "project": {
+    "_comment": "プロダクトの識別。codename=リポジトリ/コード上の呼称、product=ユーザー向け製品名、summary=1行要約。",
+    "codename": "{{CODENAME}}",
+    "product": "{{PRODUCT_NAME}}",
+    "summary": "{{PRODUCT_SUMMARY}}"
+  },
+
+  "languages": {
+    "_comment": "言語割当。converse=対話、code=コード識別子/プロンプト/正準コンテンツ、docs=レビュー対象文書、ui_locales=UI 対応ロケール、ui_template_locale=ARB 等のテンプレ言語。",
+    "converse": "{{CONVERSE_LANG}}",
+    "code": "{{CODE_LANG}}",
+    "docs": "{{DOCS_LANG}}",
+    "ui_locales": ["{{UI_LOCALE}}"],
+    "ui_template_locale": "{{UI_TEMPLATE_LOCALE}}"
+  },
+
+  "vcs": {
+    "_comment": "バージョン管理。commit/PR の言語・末尾 trailer/footer は GIT.md と整合させる。",
+    "provider": "git",
+    "default_branch": "{{DEFAULT_BRANCH}}",
+    "issue_tracker": "{{ISSUE_TRACKER}}",
+    "commit_lang": "{{COMMIT_LANG}}",
+    "commit_trailer": "{{COMMIT_TRAILER}}",
+    "pr_footer": "{{PR_FOOTER}}"
+  },
+
+  "paths": {
+    "_comment": "スクリプトが読むディレクトリ規約。work_ledger_dir=作業台帳(status.json)、worktree_dir=Issue 毎 worktree、retro_dir=retro 出力、design_docs=一次設計ドキュメント、ui_l10n_dir=UI 文言(無ければ削除可)。",
+    "work_ledger_dir": "docs/issues",
+    "worktree_dir": ".worktree",
+    "retro_dir": "docs/retro",
+    "design_docs": ["{{DESIGN_DOC_PATH}}"],
+    "ui_l10n_dir": "{{UI_L10N_DIR}}"
+  },
+
+  "components": [
+    {
+      "_comment": "ビルド/検証の単位。run-checks.sh が変更領域を検出し checks を cwd で実行する。component ごとに { name, path, stack, checks[] } を列挙する。checks[] は { label, cmd, cwd, coverage_gate?, env_unset? }。lint と test を別 check に分け、test 側に coverage_gate(%) を付ける。component が複数あればこのブロックを複製して列挙すること。",
+      "name": "{{COMPONENT_NAME}}",
+      "path": "{{COMPONENT_PATH}}",
+      "stack": "{{COMPONENT_STACK}}",
+      "checks": [
+        { "label": "{{LINT_LABEL}}", "cmd": "{{LINT_CMD}}", "cwd": "{{COMPONENT_DIR}}" },
+        { "label": "{{TEST_LABEL}}", "cmd": "{{TEST_CMD}}", "cwd": "{{COMPONENT_DIR}}", "coverage_gate": 90 }
+      ]
+    }
+  ],
+
+  "deploy": {
+    "_comment": "deploy/release/ci Skill が読む配信レシピ。秘密情報は書かない(環境変数/CIシークレット)。各 target は { name, kind, describe, cmd } の宣言的レシピ。配信先が無ければ targets は空配列のままでよい。",
+    "targets": [],
+    "_targets_example": [
+      { "name": "{{DEPLOY_TARGET_NAME}}", "kind": "{{DEPLOY_KIND}}", "describe": "{{DEPLOY_DESCRIBE}}", "cmd": null }
+    ],
+    "ci": { "provider": "{{CI_PROVIDER}}", "free_minutes": 0, "notes": "{{CI_NOTES}}" }
+  },
+
+  "runtime_verify": {
+    "_comment": "runtime-verify(動作検証) Skill が読む、鍵なし(mock/dev)でアプリを起動して実フローを動かす方法。component ごとに launch/health 等を埋める。無ければ空オブジェクトでよい。",
+    "_example": { "launch": "{{RUNTIME_LAUNCH}}", "health": "{{RUNTIME_HEALTH}}" },
+    "mock_mode": "{{MOCK_MODE_NOTE}}"
+  },
+
+  "domain_skills": [],
+  "_domain_skills_comment": "ドメイン固有(アプリの種類に依存)で有効化する Skill 名の配列。新規プロジェクトは空 []。汎用フローノード(wf 等)はここに含めない。例: 学習アプリなら content-gen を足す。",
+
+  "commit_prefixes": {
+    "_comment": "コミットメッセージ接頭辞。各ノード commit が使う(commit_lang に合わせる)。",
+    "design": "{{PREFIX_DESIGN}}",
+    "implement": "{{PREFIX_IMPLEMENT}}",
+    "verify": "{{PREFIX_VERIFY}}",
+    "review": "{{PREFIX_REVIEW}}",
+    "mr": "{{PREFIX_MR}}",
+    "deploy": "{{PREFIX_DEPLOY}}",
+    "release": "{{PREFIX_RELEASE}}"
+  },
+
+  "quality": {
+    "_comment": "retro が使う品質バーの観点キー。詳細ルーブリックは .claude/rules/QUALITY.md。採点は上限なし加点・前回比の相対評価。通常はこのまま流用してよい。",
+    "criteria": ["rework", "speed", "coverage", "tokens", "artifact_quality", "completeness"]
+  }
+}

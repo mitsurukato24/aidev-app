@@ -1,0 +1,14 @@
+{
+  "skill": "project-init",
+  "description": "新規プロジェクトの固有層 scaffold 忠実度（雛形 templates/project から PROJECT.md / config.json を生成・必須チェックリスト・run-evals 確認）。config.json.tmpl が有効 JSON のままであることも検査。",
+  "contracts": [
+    {"file": "SKILL.md",
+     "must_contain": ["templates/project", "config.json", "PROJECT.md", "必須チェックリスト", "run-evals.sh"],
+     "must_not_contain": ["docs/rules/", "docs/templates/"]}
+  ],
+  "commands": [
+    {"name": "config.json.tmpl is valid JSON",
+     "cmd": ["python3", "-c", "import json;json.load(open('../../templates/project/config.json.tmpl'))"],
+     "expect_exit": 0}
+  ]
+}

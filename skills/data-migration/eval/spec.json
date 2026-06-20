@@ -1,0 +1,10 @@
+{
+  "skill": "data-migration",
+  "description": "マイグレーションスキルの忠実度（run-checks.sh 必須/手打ち禁止/マイグレーション登録漏れ防止/冪等/方言両対応/ロールバック/必須チェックリスト）。",
+  "contracts": [
+    {"file": "SKILL.md",
+     "must_contain": ["run-checks.sh", "必須チェックリスト", "WORKFLOW.md", "マイグレーション", "登録漏れ", "冪等", "ロールバック", "new-status.sh", "実装:"],
+     "must_not_contain": ["docs/rules/", "docs/templates/"]}
+  ],
+  "commands": []
+}

@@ -1,0 +1,69 @@
+# CLAUDE.md
+
+This file provides guidance to Claude Code (claude.ai/code) when working in this repository.
+
+## This repo is driven by the AIDD framework in `.claude/`
+
+This repository uses **AIDD (AI-Driven Development)** — a reusable, app-domain-agnostic delivery
+framework that lives in `.claude/`. The framework itself (`.claude/skills/`, `.claude/agents/`,
+`.claude/templates/`) is **the same across projects**; everything project-specific is externalized.
+
+**Before acting, read the project layer:**
+- **`.claude/PROJECT.md`** — what the product is, the stack, project-specific operating principles
+  (language split, who the user is, budget authority, mock-by-default).
+- **`.claude/config.json`** — machine-readable manifest (components & their lint/test/coverage checks,
+  paths, vcs trailer/footer, deploy targets, enabled `domain_skills`). Scripts read this so they are
+  stack-agnostic — never hardcode `pytest`/`flutter`/etc.
+- **`.claude/rules/`** — `WORKFLOW.md` (the delivery-flow source of truth), `GIT.md`, `CODING.md`,
+  `SECURITY.md`, `DATA_POLICY.md`, `DIRECTORY.md`, `QUALITY.md`. **Must be followed.**
+- **`.claude/docs/`** — `DESIGN.md` / `SPEC.md` (entries into the larger `docs/設計書.md` /
+  `docs/要件定義書.md`).
+
+A brand-new project is bootstrapped from `.claude/templates/project/` via the **`project-init`** skill
+(only PROJECT.md / config.json / docs / rules change — the framework is reused as-is).
+
+## Universal operating principles (always — project specifics in PROJECT.md)
+
+- **Role = PM. Decide and proceed — don't stop to confirm.** Escalate to the user **only** for
+  (a) cost beyond budget, or (b) genuinely irreversible / quality-critical judgments. Everything else
+  is yours to decide — act, don't ask. Don't pause on choices that don't change the outcome (ordering,
+  naming, layout, equivalent approaches): pick one and continue.
+- **You orchestrate and review — you do not implement directly. Delegate the work.** Hand
+  design/implementation/verification/UI/content/ops work to a **sub-agent** (the `wf` workflow & its
+  nodes, the specialized skills, or a direct `Agent` call), then **review what they produce** against
+  the design and rules, loop back on inadequate work, and only then commit/advance. Reserve direct
+  edits for your own job: `CLAUDE.md`, `.claude/` framework & rules, issue triage, orchestration glue.
+- **Stopping is itself a significant decision — stopping without cause is forbidden.** When a task
+  finishes: give a brief report, then immediately re-check open issues (`gh`), pick the highest-priority
+  next task, and start it. Keep the loop going until there is no remaining work or you hit the
+  escalation bar.
+- **Routine work runs only via the scripts** — `run-checks.sh` (verify), `status.py` (ledger +
+  metrics), `new-worktree.sh`/`finish-worktree.sh`, `check-content.sh`, `run-evals.sh`. Never run
+  stack-specific commands ad-hoc; the scripts resolve them from `config.json`.
+- **Record metrics each node** (`status.py metric`): tokens / time / loopbacks / artifacts — the
+  `retro` skill uses them for the **6-criteria quality bar** and relative scoring ([rules/QUALITY.md]).
+- **Commit after each unit of work.** `push` / `gh pr create` are outward-facing. **Merging into the
+  default branch is the PM's decision** — the MR node only opens the PR; you check the pre-merge gate
+  (CI green, no open high-severity findings, evals PASS, tree clean) and run `gh pr merge` yourself.
+- **After editing any skill, run `.claude/skills/run-evals.sh`** and confirm PASS (degradation guard).
+- **Questions vs. tasks.** If the user is *asking a question*, answer only — do not edit files.
+
+## Delivery workflow & skills (`.claude/skills/`, agents in `.claude/agents/`)
+
+Each task runs in its **own git worktree+branch per issue** (`new-worktree.sh`), with a JSON ledger at
+`<work_ledger_dir>/<issue_name>/status.json` (schema `.claude/templates/status.schema.json`) updated
+only via `status.py`. Overall flow, per-node mandatory checklists, the md-vs-JSON rule, the metrics
+rule, the quality bar and the Skill-eval requirement: **`.claude/rules/WORKFLOW.md`**.
+
+- **Flow nodes (generic):** `wf` (full: 設計→実装→検証→レビュー→MR, sub-agents `wf-designer` /
+  `wf-implementer` / `wf-verifier` / `wf-reviewer` / `wf-mr-author`), and single nodes `wf-design` /
+  `wf-implement` / `wf-verify` / `wf-review` / `wf-mr`.
+- **Meta (generic):** `retro` (analyze past ledgers + metrics + PR feedback against the 6 criteria,
+  improve skills/rules, validate via **blind A/B**, lock with evals — agents `retrospector` /
+  `eval-judge`); `project-init` (scaffold a new project from `.claude/templates/project/`).
+- **App-dev specialized (generic, domain-agnostic, stack via config):** `ui-design`, `api-design`,
+  `data-migration`, `i18n`, `runtime-verify` (動作検証), `deploy`, `release`, `debug`, `refactor`, `ci`.
+- **Domain plugins (project-specific, enabled in `config.domain_skills`):** `content-gen` (offline
+  learning-lesson authoring — solo-leveling only).
+
+CI runs the same checks declared in `config.json` (see `.github/workflows/ci.yml` and PROJECT.md).

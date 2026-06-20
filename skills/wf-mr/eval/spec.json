@@ -1,0 +1,13 @@
+{
+  "skill": "wf-mr",
+  "description": "MR ノードの忠実度（前提の再検証/Closes #NN/外向き操作の確認/必須チェックリスト）。",
+  "contracts": [
+    {"file": "SKILL.md",
+     "must_contain": ["必須チェックリスト", "Closes #NN", "run-checks.sh", "WORKFLOW.md", "マージはしない", "gh pr merge"],
+     "must_not_contain": ["docs/work/"]},
+    {"file": "../../agents/wf-mr-author.md",
+     "must_contain": ["status.json", "do NOT merge", "Never merge"],
+     "must_not_contain": ["docs/work/"]}
+  ],
+  "commands": []
+}

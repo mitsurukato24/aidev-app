@@ -1,0 +1,75 @@
+# PROJECT — {{CODENAME}} / {{PRODUCT_NAME}}（プロジェクト固有設定）
+
+<!-- このファイルは project-init Skill が PROJECT.md.tmpl から生成する。{{...}} を実値に置換し、
+     スタック固有の説明（コメントで指示した箇所）を埋めること。構成（What this is / 運用原則 /
+     検証契約 / commands / アーキ入口 / domain_skills）は維持する。 -->
+
+このファイルは **AIDD フレームワークのプロジェクト固有層**。フレームワーク本体（`.claude/skills` /
+`agents` / `templates`）は不変で、Claude はここ＋`.claude/config.json`・`.claude/rules/`・`.claude/docs/`
+を読んで**このプロジェクトに沿って**動く。機械可読な設定は [config.json](config.json)、開発フローの真実源は
+[rules/WORKFLOW.md](rules/WORKFLOW.md)。
+
+## What this is
+
+**{{PRODUCT_NAME}}** is {{PRODUCT_SUMMARY}}.
+<!-- 製品が何か・誰のための何を解決するかを 1〜3 文で。ユーザー向け価値で書く。 -->
+
+> **Naming.** `{{CODENAME}}` is the **codebase / repository codename** (repo path, branches, internal
+> IDs, docs). **{{PRODUCT_NAME}}** is the **product name** shown to users. Same thing; use `{{CODENAME}}`
+> for code/paths and `{{PRODUCT_NAME}}` for user-facing copy.
+<!-- コードネームと製品名が同一の場合は、この注記を 1 行に縮めるか削除してよい。 -->
+
+{{COMPONENTS_OVERVIEW}}
+<!-- 各 component（config.components と対応）を 1 行ずつ。例:
+- `backend/` — {{STACK_SUMMARY のサーバ側}}（layered + service-oriented）。
+- `app/` — {{STACK_SUMMARY のクライアント側}}（feature-first + clean architecture）。
+- `docs/` — 一次設計ドキュメント。入口は docs/DESIGN.md / docs/SPEC.md。 -->
+
+## 運用原則（プロジェクト固有 — 普遍原則は ../CLAUDE.md）
+
+- **言語割当（config.languages）**: 対話＝**{{CONVERSE_LANG}}**。コード識別子・LLM プロンプト・正準コンテンツ＝
+  **{{CODE_LANG}}**。ユーザーがレビューする文書（`docs/`・設計/要件・`.claude/rules/`・`.claude/docs/`）＝**{{DOCS_LANG}}**。
+  `CLAUDE.md` 自体は英語（エージェント向けガイド）。
+- **ユーザー像（説明の出し分け）**: {{USER_PROFILE}}
+  <!-- ユーザーの専門性と、どの領域で噛み砕いて説明すべきか/不要かを書く。
+       例: ユーザーは AI エンジニア（Python/AI に精通＝基礎説明不要、JS/TS/インフラには不慣れ＝噛み砕く）。 -->
+- **予算権限**: {{BUDGET}}
+  <!-- 例: 月合計 $50 未満なら承認なしで自走（push/PR/デプロイ含む）。超える恐れのときだけユーザー判断を仰ぐ。 -->
+- **質問 vs タスク**: 質問なら答えるのみ・ファイルを編集しない。タスクのときだけ編集する。
+
+## 検証契約（{{VERIFY_CONTRACT_TITLE}}）
+
+<!-- このプロジェクトで「鍵なし/CI で決定的に通る」ための前提を書く。代表的に 2 パターン:
+     (A) Mock-by-default — API キー無しで全縦スライスが決定的に動く（LLM/外部依存をモックに切替）。
+     (B) テスト契約 — 外部依存をどう差し替え/スタブして決定的にするか。
+     runtime_verify.mock_mode と整合させること。 -->
+
+{{VERIFY_CONTRACT_BODY}}
+<!-- 例（mock-by-default の場合）:
+- **No `ANTHROPIC_API_KEY`** → LLM はモックへ。service は SDK を直接叩かず gateway 経由。
+- **No `FIREBASE_PROJECT_ID`** → dev 認証許可。
+- 設定は環境変数（.env 可）で読む。 -->
+
+## Commands（スタック詳細）
+
+検証は **必ず `run-checks.sh`（config 駆動）経由**で、`{{TEST_CMD_EXAMPLE}}` 等を直接叩かない（[rules/WORKFLOW.md]）。
+以下は人手で個別に動かす場合の参考。
+
+```bash
+{{COMMANDS_BLOCK}}
+```
+<!-- 各 component の install / run / 単発テストの参考コマンド。CI が回すゲートは config.components の checks に対応。 -->
+
+CI（`{{CI_WORKFLOW_PATH}}`）は config.components の checks（lint/test・カバレッジゲート）を回す。
+
+## アーキ詳細・ドメイン
+
+層責務・主要サブシステム・データの流れは [docs/DESIGN.md](docs/DESIGN.md) と一次設計ドキュメントを参照。
+ドメイン規約は [rules/CODING.md](rules/CODING.md) / [rules/DATA_POLICY.md](rules/DATA_POLICY.md) /
+[rules/SECURITY.md](rules/SECURITY.md)。
+
+## ドメイン Skill（このプロジェクトで有効・config.domain_skills）
+
+{{DOMAIN_SKILLS_SECTION}}
+<!-- config.domain_skills で有効化したドメイン固有 Skill を 1 行ずつ説明（汎用フレームワークには含めない）。
+     新規プロジェクトでドメイン Skill が無ければ「（なし。汎用フローノードのみ）」と書く。 -->

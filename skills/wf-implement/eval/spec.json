@@ -1,0 +1,10 @@
+{
+  "skill": "wf-implement",
+  "description": "実装ノードの忠実度（設計入力/必須チェックリスト/規約/commit 規約）。",
+  "contracts": [
+    {"file": "SKILL.md",
+     "must_contain": ["必須チェックリスト", "実装:", "CODING.md", "run-checks.sh", "WORKFLOW.md"],
+     "must_not_contain": ["docs/work/", "new-ledger.sh"]}
+  ],
+  "commands": []
+}

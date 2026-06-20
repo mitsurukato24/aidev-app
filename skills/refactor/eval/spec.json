@@ -1,0 +1,10 @@
+{
+  "skill": "refactor",
+  "description": "リファクタスキルの忠実度（run-checks.sh 必須/手打ち禁止/挙動不変/削除=TO-BE/集約先明記/必須チェックリスト）。",
+  "contracts": [
+    {"file": "SKILL.md",
+     "must_contain": ["run-checks.sh", "必須チェックリスト", "WORKFLOW.md", "挙動を変えない", "削除", "deprecated", "集約先", "new-status.sh", "実装:"],
+     "must_not_contain": ["docs/rules/", "docs/templates/"]}
+  ],
+  "commands": []
+}

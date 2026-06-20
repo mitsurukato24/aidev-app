@@ -1,0 +1,10 @@
+{
+  "skill": "i18n",
+  "description": "多言語化スキルの忠実度（run-checks.sh 必須/手打ち禁止/全言語パリティ/ソース編集/ハードコード禁止/キー欠落検出/必須チェックリスト）。",
+  "contracts": [
+    {"file": "SKILL.md",
+     "must_contain": ["run-checks.sh", "必須チェックリスト", "WORKFLOW.md", "ui_locales", "ui_l10n_dir", "ハードコード", "キー欠落", "new-status.sh", "実装:"],
+     "must_not_contain": ["docs/rules/", "docs/templates/"]}
+  ],
+  "commands": []
+}

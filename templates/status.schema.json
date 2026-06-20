@@ -1,0 +1,100 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "aidd/status@1",
+  "title": "作業ステータス (<work_ledger_dir>/<issue_name>/status.json)",
+  "description": "1 Issue = 1 作業フォルダの状態。md ではなく JSON を真実源とし、.claude/skills/wf/scripts/status.py 経由で更新する（手編集しない）。場所は .claude/config.json の paths.work_ledger_dir。ガイドは .claude/rules/WORKFLOW.md。",
+  "type": "object",
+  "required": ["schema", "title", "type", "current_node", "nodes"],
+  "properties": {
+    "schema": {"const": "aidd/status@1"},
+    "title": {"type": "string"},
+    "issue": {"type": ["integer", "string", "null"], "description": "Issue 番号(issue_tracker は config 由来)"},
+    "issue_url": {"type": ["string", "null"]},
+    "type": {"type": "string", "description": "標準 ＋ ドメイン種別(content/ui 等)。content/ui は domain ブロックを持つ"},
+    "priority": {"enum": ["高", "中", "低", null]},
+    "created": {"type": "string", "description": "YYYY-MM-DD"},
+    "current_node": {"enum": ["design", "implement", "verify", "review", "mr"]},
+    "done": {"type": "boolean"},
+    "nodes": {
+      "type": "object",
+      "required": ["design", "implement", "verify", "review", "mr"],
+      "properties": {
+        "design": {"$ref": "#/$defs/node"},
+        "implement": {"$ref": "#/$defs/node"},
+        "verify": {
+          "allOf": [{"$ref": "#/$defs/node"}],
+          "properties": {
+            "result": {"enum": ["PASS", "FAIL", null]},
+            "coverage": {"type": "object", "description": "component名→カバレッジ% (config.components 由来)"}
+          }
+        },
+        "review": {
+          "allOf": [{"$ref": "#/$defs/node"}],
+          "properties": {
+            "findings": {"type": "array", "items": {"type": "object"},
+              "description": "{file_line, issue, severity(高/中/低), resolution}"}
+          }
+        },
+        "mr": {
+          "allOf": [{"$ref": "#/$defs/node"}],
+          "properties": {"pr_url": {"type": ["string", "null"]}}
+        }
+      }
+    },
+    "domain": {
+      "type": "object",
+      "description": "種別固有の状態。content/ui のときのみ。著作ガイドは Skill/agent 側が持つ。",
+      "properties": {
+        "kind": {"enum": ["content", "ui"]},
+        "track": {"type": ["string", "null"]},
+        "concept": {"type": ["string", "null"]},
+        "lesson_path": {"type": ["string", "null"]},
+        "check_content": {"enum": ["PASS", "FAIL", null]},
+        "target": {"type": ["string", "null"]},
+        "states": {"type": "array", "items": {"type": "string"}},
+        "run_checks": {"enum": ["PASS", "FAIL", null]}
+      }
+    },
+    "commits": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["node", "hash"],
+        "properties": {
+          "node": {"type": "string"},
+          "hash": {"type": "string"},
+          "summary": {"type": "string"}
+        }
+      }
+    }
+  },
+  "$defs": {
+    "node": {
+      "type": "object",
+      "required": ["status"],
+      "properties": {
+        "status": {"enum": ["todo", "doing", "done"]},
+        "notes": {"type": "string"},
+        "checks": {"type": "object", "description": "必須チェックリスト名→bool"},
+        "commit": {"type": ["string", "null"]},
+        "metrics": {
+          "type": "object",
+          "description": "計測値。時間/手戻り/成果物数は正確、tokens は best-effort(自己申告/transcript)。status.py metric で更新。retro が QUALITY.md の6観点で前回比評価する。",
+          "properties": {
+            "started_at": {"type": ["string", "null"]},
+            "ended_at": {"type": ["string", "null"]},
+            "duration_sec": {"type": "integer"},
+            "tokens": {
+              "type": "object",
+              "properties": {
+                "in": {"type": "integer"}, "out": {"type": "integer"}, "total": {"type": "integer"}
+              }
+            },
+            "loopbacks": {"type": "integer", "description": "ノード差し戻し回数(手戻り)"},
+            "artifacts": {"type": "integer", "description": "変更ファイル数"}
+          }
+        }
+      }
+    }
+  }
+}

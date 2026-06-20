@@ -1,0 +1,13 @@
+{
+  "skill": "ui-design",
+  "description": "UI スキルの忠実度（run-checks.sh 必須/手打ち禁止/デザインシステムトークン/ui_locales i18n/状態網羅/必須チェックリスト・config 駆動）。",
+  "contracts": [
+    {"file": "SKILL.md",
+     "must_contain": ["run-checks.sh", "必須チェックリスト", "WORKFLOW.md", "DESIGN.md", "ui_locales", "通常/空/ローディング/エラー", "手打ち禁止", "new-status.sh", "UI:"],
+     "must_not_contain": ["docs/rules/", "docs/templates/", "new-ledger.sh"]},
+    {"file": "../../agents/ui-designer.md",
+     "must_contain": ["status.json"],
+     "must_not_contain": ["docs/rules/"]}
+  ],
+  "commands": []
+}

@@ -1,0 +1,16 @@
+{
+  "skill": "wf-verify",
+  "description": "検証ノードの忠実度（run-checks.sh 必須/手打ち禁止/RESULT: PASS/カバレッジゲート）。run-checks.sh の存在も確認。",
+  "contracts": [
+    {"file": "SKILL.md",
+     "must_contain": ["run-checks.sh", "必須チェックリスト", "RESULT: PASS", "手打ち", "check-content.sh"],
+     "must_not_contain": ["docs/work/"]},
+    {"file": "../../agents/wf-verifier.md",
+     "must_contain": ["run-checks.sh"]}
+  ],
+  "commands": [
+    {"name": "run-checks.sh exists and is bash",
+     "cmd": ["bash", "-n", "scripts/run-checks.sh"],
+     "expect_exit": 0}
+  ]
+}

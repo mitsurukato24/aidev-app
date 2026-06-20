@@ -1,0 +1,10 @@
+{
+  "skill": "debug",
+  "description": "デバッグスキルの忠実度（run-checks.sh 必須/手打ち禁止/再現手順/根本原因/リグレッションテスト/必須チェックリスト）。",
+  "contracts": [
+    {"file": "SKILL.md",
+     "must_contain": ["run-checks.sh", "必須チェックリスト", "WORKFLOW.md", "再現", "根本原因", "リグレッションテスト", "new-status.sh", "実装:"],
+     "must_not_contain": ["docs/rules/", "docs/templates/"]}
+  ],
+  "commands": []
+}

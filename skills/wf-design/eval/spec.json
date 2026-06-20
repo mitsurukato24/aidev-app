@@ -1,0 +1,13 @@
+{
+  "skill": "wf-design",
+  "description": "設計ノードの忠実度（status.json/必須チェックリスト/commit 規約/WORKFLOW 参照）。",
+  "contracts": [
+    {"file": "SKILL.md",
+     "must_contain": ["new-status.sh", "必須チェックリスト", "設計:", "WORKFLOW.md", "受入基準"],
+     "must_not_contain": ["docs/work/", "new-ledger.sh"]},
+    {"file": "../../agents/wf-designer.md",
+     "must_contain": ["status.json"],
+     "must_not_contain": ["docs/work/"]}
+  ],
+  "commands": []
+}
