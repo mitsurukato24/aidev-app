@@ -8,7 +8,10 @@
 # - 楽観ロック（new-worktree.sh の claim）を「✅ done」コメントで解放する（issue 番号がある時・best-effort）
 set -euo pipefail
 HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-ROOT="$(git -C "$HERE" rev-parse --show-toplevel)"
+# メインの作業ツリー root。--show-toplevel は「現在の」worktree を返すため、リンク worktree 内の
+# cwd から呼ぶと worktree 側を指し、$ROOT/$WORKTREE_DIR/$NAME がパス二重化する（#194）。
+# 全 worktree で共有される git-common-dir(<main>/.git) の親＝必ずメイン root に解決する。
+ROOT="$(cd "$HERE" && cd "$(git rev-parse --git-common-dir)/.." && pwd)"
 LIB="$(cd "$HERE/../../lib" && pwd)"
 WORKTREE_DIR="$(python3 "$LIB/config.py" get paths.worktree_dir)"; WORKTREE_DIR="${WORKTREE_DIR:-.worktree}"
 

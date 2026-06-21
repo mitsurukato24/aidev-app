@@ -30,7 +30,9 @@ YIELD_TAG="🤝 yield"
 DONE_TAG="✅ done"
 
 HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-ROOT="$(git -C "$HERE" rev-parse --show-toplevel)"
+# メインの作業ツリー root（finish-worktree.sh と同じ堅牢解決・#194）。--show-toplevel は現在の
+# worktree を返すため、リンク worktree 内から呼ぶと作成先が二重化しうる。git-common-dir の親で固定。
+ROOT="$(cd "$HERE" && cd "$(git rev-parse --git-common-dir)/.." && pwd)"
 LIB="$(cd "$HERE/../../lib" && pwd)"
 # 配置(worktree_dir)とブランチ元(default_branch)は config 由来＝プロジェクト非依存
 WORKTREE_DIR="$(python3 "$LIB/config.py" get paths.worktree_dir)"; WORKTREE_DIR="${WORKTREE_DIR:-.worktree}"
